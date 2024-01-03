@@ -1,36 +1,27 @@
-export class Url {
+import { Url } from "./url";
+
+export class UrlService {
     baseUrl: string;
     apiKey: string;
 
-    text?: string;
-    sourceCountries?: string;
-    language?: string;
-    minSentiment?: number;
-    maxSentiment?: number;
-    earliestPublishDate?: string;
-    latestPublishDate?: string;
-    newsSources?: string;
-    authors?: string;
-    entities?: string;
-    locationFilter?: string;
-    sort?: string;
-    sortDirection?: string;
-    offset?: number;
-    number?: number;
+    urlObj: Url;
 
-    constructor(baseUrl: string, apiKey: string) {
+    constructor(baseUrl: string, apiKey: string, urlObj?: Url) {
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
+        this.urlObj = urlObj || {} as Url;
     }
 
-    getUrl(self: Url): string {
+    getUrl(): string {
 
         let url: string = this.baseUrl + "?api-key=" + this.apiKey;
 
-        type UrlObjectKey = keyof typeof self;
+        type UrlObjectKey = keyof typeof this.urlObj;
 
-        Object.keys(self).forEach(function (key) {
-            const value = self[key as UrlObjectKey];
+        Object.keys(this.urlObj).forEach(key => {
+            const value = this.urlObj[key as UrlObjectKey];
+
+            if (!value) return;
 
             switch (key) {
                 case "text":
