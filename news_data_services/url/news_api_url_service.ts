@@ -14,7 +14,6 @@ export class UrlService {
 
     getUrl(): string {
 
-        // let url: string = this.baseUrl + "?api-key=" + this.apiKey;
         let url: string = this.baseUrl + "?apiKey=" + this.apiKey;
 
         type UrlObjectKey = keyof typeof this.urlObj;

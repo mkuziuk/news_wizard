@@ -17,10 +17,9 @@ const url = new UrlService(baseApiUrl, apiKey, urlObj).getUrl();
 
 console.log(url);
 
-async function writenews() {
+async function logNews() {
     let news: NewsItem[] = await newsUtils.getNews(url);
-    // console.log(await newsUtils.getNewsItemsCuts(news));
-    console.log(news);
+    console.log(await newsUtils.getNewsItemsCuts(news));
 }
 
-writenews();
+logNews();

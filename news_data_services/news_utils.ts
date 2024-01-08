@@ -11,7 +11,6 @@ const getNewsItemsCuts = async (news: NewsItem[]): Promise<NewsItemCut[]> => {
     return newsMapper.newsItemsToNewsItemCuts(news);
 }
 
-
 const newsUtils = Object.freeze({
     getNews,
     getNewsItemsCuts,
