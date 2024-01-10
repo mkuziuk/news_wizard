@@ -1,4 +1,4 @@
-import { NewsItem, NewsItemCut } from "./news_item";
+import { NewsItem, NewsItemCut } from "../types/news_item";
 
 const newsMapper = {
     apiInputToNewsItems,
