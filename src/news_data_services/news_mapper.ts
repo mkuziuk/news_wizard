@@ -40,9 +40,7 @@ const newsItemsToNewsItemCuts = async (newsItems: NewsItem[]): Promise<NewsItemC
     }));
 }
 
-const newsMapper = {
+export const newsMapper = {
     apiInputToNewsItems,
     newsItemsToNewsItemCuts
 }
-
-export { newsMapper };
