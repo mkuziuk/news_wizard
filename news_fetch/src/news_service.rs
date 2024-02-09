@@ -23,7 +23,7 @@ pub async fn get_selector_text(url: &str, selector: &str) -> Result<Vec<String>>
 
     Ok(result)
 }
-
+//sasasaasa
 pub async fn get_selectors_text(
     url: &str,
     selectors: Vec<&str>,
