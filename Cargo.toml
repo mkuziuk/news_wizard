@@ -3,7 +3,8 @@
 members = [
     "back",
     "news_fetch",
-    "api",
+    "dto",
+    "meilisearch_api",
 ]
 
 resolver = "2"
