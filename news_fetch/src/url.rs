@@ -36,6 +36,7 @@ impl Url {
     }
 }
 
+/// get url [String] from [Url].
 pub fn get_url(url: Url) -> String {
     let mut url_str: String = url.base_url + "?apiKey=" + &url.api_key;
 

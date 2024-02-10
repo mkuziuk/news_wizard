@@ -21,6 +21,7 @@ async fn main() {
 mod tests {
     use super::url::{self, Url};
 
+    /// Test get_url function.
     #[test]
     fn test_get_url() {
         let base_url = "https://newsdata.io/api/1/news".to_string();

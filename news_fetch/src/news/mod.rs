@@ -8,6 +8,7 @@ use anyhow::Result;
 use reqwest;
 use serde_json;
 
+/// Get [NewsData] from the given url.
 pub async fn get_news_data(url: &str) -> Result<NewsData> {
     let data = reqwest::get(url).await?.text().await?;
     let data: NewsData = serde_json::from_str(&data)?;
