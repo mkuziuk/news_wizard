@@ -1,31 +1,33 @@
-use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
 
 use chrono::{DateTime, Utc};
+use std::collections::HashMap;
 use uuid::Uuid;
 
-enum ExternalId {
+#[derive(Serialize, Deserialize)]
+pub enum ExternalId {
     Telegram(u64),
     Discord(u64),
 }
 
-struct User {
+#[derive(Serialize, Deserialize, Hash, PartialEq, Eq)]
+pub struct Language(String);
+
+#[derive(Serialize, Deserialize)]
+pub struct User {
     id: Uuid,
     external_ids: Vec<ExternalId>,
     email: Option<String>,
     interests: Vec<String>,
 }
 
-struct NewsDataArticleId(String);
-struct NewsDataSourceId(String);
-
-struct Language(String);
-
-struct NewsArticle {
+#[derive(Serialize, Deserialize)]
+pub struct NewsArticle {
     id: Uuid,
-    newsdata_id: NewsDataArticleId,
+    newsdata_id: String,
     title: String,
     link: String,
-    source_id: NewsDataSourceId,
+    source_id: String,
     keywords: Vec<String>,
     author: String,
     summary: String,
@@ -37,9 +39,11 @@ struct NewsArticle {
     translations: HashMap<Language, TranslatedArticle>,
 }
 
-struct TranslatedArticle {
-    article_id: Uuid,
-    language: Language,
+#[derive(Serialize, Deserialize)]
+pub struct TranslatedArticle {
+    id: Uuid,
+    news_article_id: Uuid,
+    language: String,
     title: String,
     summary: String,
     content: String,
