@@ -1,6 +1,11 @@
+use meilisearch_sdk::client::Client;
+use std::env;
+
+use dto;
+use meilisearch_api::MeiliRepository;
+
 pub mod news;
 pub mod url;
-use std::env;
 
 #[tokio::main]
 async fn main() {
@@ -14,7 +19,18 @@ async fn main() {
     let url = url::get_url(url);
 
     let news = news::get_news_data(&url).await.unwrap();
+
     println!("{:#?}", news);
+
+    let client = Client::new("http://localhost:7700", Some("super_cool_key"));
+    let meili_repository = MeiliRepository::new(client);
+
+    // let results = match news::news_data_to_news_articles(news) {
+    //     Ok(results) => results,
+    //     Err(e) => {
+    //         println!("{:#?}", e);
+    //     }
+    // };
 }
 
 #[cfg(test)]
