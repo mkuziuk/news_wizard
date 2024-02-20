@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, FixedOffset};
 use std::collections::HashMap;
 use uuid::Uuid;
 
@@ -10,8 +10,8 @@ pub enum ExternalId {
     Discord(u64),
 }
 
-#[derive(Serialize, Deserialize, Hash, PartialEq, Eq)]
-pub struct Language(String);
+#[derive(Serialize, Deserialize, Hash, PartialEq, Eq, Debug)]
+pub struct Language(pub String);
 
 #[derive(Serialize, Deserialize)]
 pub struct User {
@@ -21,25 +21,32 @@ pub struct User {
     interests: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize)]
-pub struct NewsArticle {
-    id: Uuid,
-    newsdata_id: String,
-    title: String,
-    link: String,
-    source_id: String,
-    keywords: Vec<String>,
-    author: String,
-    summary: String,
-    publication_date: DateTime<Utc>,
-    content: String,
-    country: String,
-    category: String,
-    language: Language,
-    translations: HashMap<Language, TranslatedArticle>,
+#[derive(Serialize, Deserialize, Debug)]
+pub enum ExternalArticleId {
+    None,
+    NewsDataIo(String),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct NewsArticle {
+    pub id: Uuid,
+    pub api_id: ExternalArticleId,
+    pub title: String,
+    pub link: String,
+    pub source_id: String,
+    pub keywords: Vec<String>,
+    pub authors: Vec<String>,
+    pub summary: String,
+    pub publication_date: DateTime<FixedOffset>,
+    pub content: String,
+    pub country: Vec<String>,
+    pub category: Vec<String>,
+    pub language: Language,
+    pub tags: Vec<String>,
+    pub translations: HashMap<Language, TranslatedArticle>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TranslatedArticle {
     id: Uuid,
     news_article_id: Uuid,
