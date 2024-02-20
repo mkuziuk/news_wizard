@@ -12,7 +12,7 @@ use reqwest;
 use serde_json;
 use uuid::Uuid;
 
-use dto::{Language, NewsArticle};
+use dto::{ExternalArticleId, Language, NewsArticle};
 
 /// Get [NewsData] from the given url.
 pub async fn get_news_data(url: &str) -> Result<NewsData> {
@@ -32,54 +32,55 @@ pub fn news_data_to_news_articles(news_data: NewsData) -> Result<Vec<NewsArticle
     for article in articles {
         let news_article = NewsArticle {
             id: Uuid::new_v4(),
-            newsdata_id: match article.article_id {
-                None => "".to_string(),
-                Some(id) => id,
+            api_id: match &article.article_id {
+                None => ExternalArticleId::None,
+                Some(id) => ExternalArticleId::NewsDataIo(id.to_owned()),
             },
-            title: match article.title {
+            title: match &article.title {
                 None => "".to_string(),
-                Some(title) => title,
+                Some(title) => title.to_owned(),
             },
-            link: match article.link {
+            link: match &article.link {
                 None => "".to_string(),
-                Some(link) => link,
+                Some(link) => link.to_owned(),
             },
-            source_id: match article.source_id {
+            source_id: match &article.source_id {
                 None => "".to_string(),
-                Some(source_id) => source_id,
+                Some(source_id) => source_id.to_owned(),
             },
-            keywords: match article.keywords {
+            keywords: match &article.keywords {
                 None => Vec::new(),
-                Some(keywords) => keywords,
+                Some(keywords) => keywords.to_owned(),
             },
-            authors: match article.creator {
+            authors: match &article.creator {
                 None => Vec::new(),
-                Some(authors) => authors,
+                Some(authors) => authors.to_owned(),
             },
-            summary: match article.description {
+            summary: match &article.description {
                 None => "".to_string(),
-                Some(summary) => summary,
+                Some(summary) => summary.to_owned(),
             },
-            publication_date: match article.pub_date {
+            publication_date: match &article.pub_date {
                 None => DateTime::from(Utc::now()),
-                Some(pub_date) => DateTime::parse_from_str(&pub_date, "%Y-%m-%d %H:%M:%S")?,
+                Some(pub_date) => DateTime::parse_from_str(pub_date, "%Y-%m-%d %H:%M:%S")?,
             },
-            content: match article.content {
+            content: match &article.content {
                 None => "".to_string(),
-                Some(content) => content,
+                Some(content) => content.to_owned(),
             },
-            country: match article.country {
+            country: match &article.country {
                 None => vec!["".to_string()],
-                Some(country) => country,
+                Some(country) => country.to_owned(),
             },
-            category: match article.category {
+            category: match &article.category {
                 None => vec!["".to_string()],
-                Some(category) => category,
+                Some(category) => category.to_owned(),
             },
-            language: match article.language {
+            language: match &article.language {
                 None => Language("".to_string()),
-                Some(language) => Language(language),
+                Some(language) => Language(language.to_owned()),
             },
+            tags: Vec::new(),
             translations: HashMap::new(),
         };
 

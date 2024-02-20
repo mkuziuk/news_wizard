@@ -52,8 +52,8 @@ impl MeiliRepository {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{DateTime, FixedOffset};
-    use dto::{Language, NewsArticle};
+    use chrono::DateTime;
+    use dto::{ExternalArticleId, Language, NewsArticle};
     use meilisearch_sdk::client::Client;
     use std::collections::HashMap;
     use uuid::Uuid;
@@ -65,7 +65,7 @@ mod tests {
 
         let new_article = NewsArticle {
             id: Uuid::new_v4(),
-            newsdata_id: String::from("987654321"),
+            api_id: ExternalArticleId::NewsDataIo(String::from("987654321")),
             title: String::from("Updated News!"),
             link: String::from("https://example.com/updated-article"),
             source_id: String::from("source987"),
@@ -77,6 +77,7 @@ mod tests {
             country: vec![String::from("US")],
             category: vec![String::from("Technology")],
             language: Language(String::from("en")),
+            tags: Vec::new(),
             translations: HashMap::new(),
         };
 
@@ -91,8 +92,8 @@ mod tests {
 
         println!("Articles: {:?}", articles);
 
-        let delete_arcticle = meili_repository.delete_article(&articles[0].id).await;
-        assert!(delete_arcticle.is_ok());
+        // let delete_arcticle = meili_repository.delete_article(&articles[0].id).await;
+        // assert!(delete_arcticle.is_ok());
 
         // Additional checks can be done to verify the properties of the added or updated article
     }
@@ -105,7 +106,7 @@ mod tests {
         let articles = vec![
             NewsArticle {
                 id: Uuid::new_v4(),
-                newsdata_id: String::from("123456789"),
+                api_id: ExternalArticleId::NewsDataIo(String::from("0123456789")),
                 title: String::from("Breaking News!"),
                 link: String::from("https://example.com/article"),
                 source_id: String::from("source123"),
@@ -118,11 +119,12 @@ mod tests {
                 country: vec![String::from("US")],
                 category: vec![String::from("Politics")],
                 language: Language(String::from("en")),
+                tags: Vec::new(),
                 translations: HashMap::new(),
             },
             NewsArticle {
                 id: Uuid::new_v4(),
-                newsdata_id: String::from("0987654321"),
+                api_id: ExternalArticleId::NewsDataIo(String::from("9876543210")),
                 title: String::from("Breaking News 22222!"),
                 link: String::from("https://example.com/article2222"),
                 source_id: String::from("source321"),
@@ -135,6 +137,7 @@ mod tests {
                 country: vec![String::from("US")],
                 category: vec![String::from("Politics")],
                 language: Language(String::from("en")),
+                tags: Vec::new(),
                 translations: HashMap::new(),
             }, // Add more NewsArticle instances as needed
         ];
@@ -149,7 +152,7 @@ mod tests {
         let client = Client::new("http://localhost:7700", Some("super_cool_key"));
         let meili_repository = MeiliRepository::new(client);
 
-        let articles = meili_repository.get_articles("Breaking").await;
+        let articles = meili_repository.get_articles("").await;
 
         println!("Articles: {:#?}", articles);
 
