@@ -4,7 +4,7 @@ pub mod data;
 pub use article::Article;
 pub use data::NewsData;
 
-use std::collections::HashMap;
+use std::{collections::HashMap, str::FromStr};
 
 use anyhow::Result;
 use chrono::{DateTime, Utc};
@@ -31,9 +31,12 @@ pub fn news_data_to_news_articles(news_data: NewsData) -> Result<Vec<NewsArticle
 
     for article in articles {
         let news_article = NewsArticle {
-            id: Uuid::new_v4(),
+            id: match &article.article_id {
+                None => Uuid::new_v4(),
+                Some(id) => Uuid::from_str(id)?,
+            },
             api_id: match &article.article_id {
-                None => ExternalArticleId::None,
+                None => ExternalArticleId::Empty,
                 Some(id) => ExternalArticleId::NewsDataIo(id.to_owned()),
             },
             title: match &article.title {
@@ -84,6 +87,7 @@ pub fn news_data_to_news_articles(news_data: NewsData) -> Result<Vec<NewsArticle
             translations: HashMap::new(),
         };
 
+        // println!("{:#?}", news_article);
         news_articles.push(news_article);
     }
 

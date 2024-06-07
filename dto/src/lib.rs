@@ -23,7 +23,7 @@ pub struct User {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum ExternalArticleId {
-    None,
+    Empty,
     NewsDataIo(String),
 }
 
@@ -43,14 +43,14 @@ pub struct NewsArticle {
     pub category: Vec<String>,
     pub language: Language,
     pub tags: Vec<String>,
-    pub translations: HashMap<Language, TranslatedArticle>,
+    pub translations: HashMap<Uuid, Language>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TranslatedArticle {
     id: Uuid,
     news_article_id: Uuid,
-    language: String,
+    language: Language,
     title: String,
     summary: String,
     content: String,
