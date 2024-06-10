@@ -20,9 +20,9 @@ impl MeiliRepository {
         Ok(())
     }
 
-    pub async fn add_articles(&self, new_articles: Vec<NewsArticle>) -> Result<()> {
+    pub async fn add_or_replace_articles(&self, new_articles: Vec<NewsArticle>) -> Result<()> {
         let index = self.client.index("news_articles");
-        index.add_documents(&new_articles, None).await?;
+        index.add_or_replace(&new_articles, Some("id")).await?;
 
         Ok(())
     }
@@ -47,6 +47,12 @@ impl MeiliRepository {
 
         Ok(())
     }
+
+    pub async fn create_dump(&self) -> Result<()> {
+        self.client.create_dump().await?;
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -65,7 +71,7 @@ mod tests {
 
         let new_article = NewsArticle {
             id: Uuid::new_v4(),
-            api_id: ExternalArticleId::NewsDataIo(String::from("987654321")),
+            api_id: ExternalArticleId::Empty,
             title: String::from("Updated News!"),
             link: String::from("https://example.com/updated-article"),
             source_id: String::from("source987"),
@@ -106,7 +112,7 @@ mod tests {
         let articles = vec![
             NewsArticle {
                 id: Uuid::new_v4(),
-                api_id: ExternalArticleId::NewsDataIo(String::from("0123456789")),
+                api_id: ExternalArticleId::NewsDataIo("12asas3".to_string()),
                 title: String::from("Breaking News!"),
                 link: String::from("https://example.com/article"),
                 source_id: String::from("source123"),
@@ -124,7 +130,7 @@ mod tests {
             },
             NewsArticle {
                 id: Uuid::new_v4(),
-                api_id: ExternalArticleId::NewsDataIo(String::from("9876543210")),
+                api_id: ExternalArticleId::NewsDataIo("12as1wwas3".to_string()),
                 title: String::from("Breaking News 22222!"),
                 link: String::from("https://example.com/article2222"),
                 source_id: String::from("source321"),
@@ -142,7 +148,7 @@ mod tests {
             }, // Add more NewsArticle instances as needed
         ];
 
-        let result = meili_repository.add_articles(articles).await;
+        let result = meili_repository.add_or_replace_articles(articles).await;
         println!("{:?}", result);
         assert!(result.is_ok());
     }

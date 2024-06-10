@@ -15,7 +15,9 @@ async fn main() {
     let api_key = "pub_35440fe584a4c4c1e0428c4c5454dfedf14bc".to_string();
 
     let mut url = url::Url::new(url, api_key);
-    url.size = Some(5);
+    url.size = Some(10);
+    url.language = Some("en".to_string());
+    url.q = Some("crypto AND blockchain".to_string());
     let url = url::get_url(url);
 
     let client = Client::new("http://localhost:7700", Some("super_cool_key"));
@@ -24,9 +26,9 @@ async fn main() {
     loop {
         let news_data = match news::get_news_data(&url).await {
             Ok(data) => data,
-            Err(_) => {
-                println!("Failed to get news data");
-                news::NewsData::new()
+            Err(e) => {
+                println!("Failed to get news data: {:?}", e);
+                continue;
             }
         };
 
@@ -34,18 +36,18 @@ async fn main() {
 
         let results = match news::news_data_to_news_articles(news_data) {
             Ok(data) => data,
-            Err(_) => {
-                println!("Failed to convert news data to news articles");
-                Vec::new()
+            Err(e) => {
+                println!("Failed to convert news data to news articles: {:?}", e);
+                continue;
             }
         };
 
-        match meili_repository.add_articles(results).await {
+        match meili_repository.add_or_replace_articles(results).await {
             Ok(_) => println!("Articles added to MeiliSearch"),
-            Err(_) => println!("Failed to add articles to MeiliSearch"),
+            Err(e) => println!("Failed to add articles to MeiliSearch: {:?}", e),
         };
 
-        sleep(Duration::from_secs(5)).await;
+        sleep(Duration::from_secs(300)).await;
     }
 }
 
