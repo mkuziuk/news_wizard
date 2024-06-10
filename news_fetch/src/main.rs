@@ -12,7 +12,7 @@ async fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
     let url = "https://newsdata.io/api/1/news".to_string();
-    let api_key = "pub_35440fe584a4c4c1e0428c4c5454dfedf14bc".to_string();
+    let api_key = "newsdata.io API key".to_string();
 
     let mut url = url::Url::new(url, api_key);
     url.size = Some(10);
